@@ -187,6 +187,8 @@ void JointTrajectoryAction::goalCB(JointTractoryActionServer::GoalHandle & gh)
   {
     ROS_WARN_STREAM(
         "Ignoring goal tolerance in action, using paramater tolerance of " << goal_threshold_ << " instead");
+    // FMP
+    ROS_WARN_STREAM("Tolerances were " << gh.getGoal()->goal_tolerance[0]);
   }
   if (!gh.getGoal()->path_tolerance.empty())
   {

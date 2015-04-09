@@ -54,13 +54,14 @@ bool RobotStateInterface::init(std::string default_ip, int default_port)
   int port;
 
   // override IP/port with ROS params, if available
-  ros::param::param<std::string>("robot_ip_address", ip, default_ip);
-  ros::param::param<int>("~port", port, default_port);
+  ros::param::param<std::string>("robot_ip", ip, default_ip);
+  // FMP
+  ros::param::param<int>("robot_port", port, default_port);
 
   // check for valid parameter values
   if (ip.empty())
   {
-    ROS_ERROR("No valid robot IP address found.  Please set ROS 'robot_ip_address' param");
+    ROS_ERROR("No valid robot IP address found.  Please set ROS 'robot_ip' param");
     return false;
   }
   if (port <= 0)
