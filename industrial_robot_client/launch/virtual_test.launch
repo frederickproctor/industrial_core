@@ -1,0 +1,50 @@
+<!--
+Run this launch file like this, for two independent controllers:
+
+    # first run a simple message simulator robot on ports 11000 and 11002
+    roslaunch nist_kitting simple_message_sim.launch
+
+    # then do this
+    roslaunch industrial_robot_client virtual_test.launch robot_ip:=localhost urdf_path:=/usr/local/el-robotics-core/sim_robot/urdf/sim_robot.urdf
+
+    # then run the shell
+    roslaunch nist_kitting irclient_sh.launch
+
+In another window:
+
+    # run another simple message simulator robot on ports 12000 and 12002
+    roslaunch nist_kitting simple_message_sim.launch msg_port:=12000 state_port:=12002
+
+    # then do this
+    export ROS_NAMESPACE=/robot2
+    roslaunch industrial_robot_client virtual_test.launch robot_ip:=localhost urdf_path:=/usr/local/el-robotics-core/sim_robot/urdf/sim_robot.urdf motion_port:=12000 robot_port:=12002 ns:=/robot2
+
+    # and run a second shell
+    roslaunch nist_kitting irclient_sh.launch ns:=/robot2
+-->
+
+<launch>
+
+<arg name="ns" default="/" />
+
+<group ns="$(arg ns)">
+
+  <arg name="robot_ip" />
+  <arg name="motion_port" default="11000"/>
+  <arg name="robot_port" default="11002"/>
+  <arg name="urdf_path" />
+
+  <param name="robot_ip" type="str" value="$(arg robot_ip)"/>
+  <param name="motion_port" type="int" value="$(arg motion_port)" />
+  <param name="robot_port" type="int" value="$(arg robot_port)" />
+  <param name="robot_description" textfile="$(arg urdf_path)" />
+
+  <node pkg="industrial_robot_client" type="robot_state" name="robot_state" output="screen"/>
+  
+  <node pkg="industrial_robot_client" type="motion_download_interface" name="motion_download_interface" output="screen"/>
+  
+  <node pkg="industrial_robot_client" type="joint_trajectory_action" name="joint_trajectory_action" output="screen"/>
+
+</group>
+
+</launch>
